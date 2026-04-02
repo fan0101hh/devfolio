@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: devfolio-backend
+  datasource:
+    url: ${DEVFOLIO_DB_URL:jdbc:mysql://localhost:3306/devfolio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai}
+    username: ${DEVFOLIO_DB_USERNAME:devfolio}
+    password: ${DEVFOLIO_DB_PASSWORD:devfolio123}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+
+server:
+  port: 8080
+
+app:
+  security:
+    admin-username: ${DEVFOLIO_ADMIN_USERNAME:admin}
+    admin-password: ${DEVFOLIO_ADMIN_PASSWORD:$2a$10$dN9vEFwTHeDfNMh9iZyBnu6PMqFMFJp9H8rWbFLOSc6TCXwGr/vSi}
+    jwt-secret: ${DEVFOLIO_JWT_SECRET:devfolio-super-secret-key-change-this-before-production-2026}
+    jwt-expiration-minutes: ${DEVFOLIO_JWT_EXPIRATION_MINUTES:720}

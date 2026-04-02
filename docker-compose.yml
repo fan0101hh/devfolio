@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: devfolio-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: devfolio
+      MYSQL_USER: ${DEVFOLIO_DB_USERNAME:-devfolio}
+      MYSQL_PASSWORD: ${DEVFOLIO_DB_PASSWORD:-devfolio123}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123456}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      DEVFOLIO_DB_URL: jdbc:mysql://mysql:3306/devfolio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      DEVFOLIO_DB_USERNAME: ${DEVFOLIO_DB_USERNAME:-devfolio}
+      DEVFOLIO_DB_PASSWORD: ${DEVFOLIO_DB_PASSWORD:-devfolio123}
+      DEVFOLIO_ADMIN_USERNAME: ${DEVFOLIO_ADMIN_USERNAME:-admin}
+      DEVFOLIO_ADMIN_PASSWORD: ${DEVFOLIO_ADMIN_PASSWORD}
+      DEVFOLIO_JWT_SECRET: ${DEVFOLIO_JWT_SECRET}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
