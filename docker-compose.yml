@@ -28,6 +28,7 @@ services:
       DEVFOLIO_ADMIN_USERNAME: ${DEVFOLIO_ADMIN_USERNAME:-admin}
       DEVFOLIO_ADMIN_PASSWORD: ${DEVFOLIO_ADMIN_PASSWORD}
       DEVFOLIO_JWT_SECRET: ${DEVFOLIO_JWT_SECRET}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost:5173}
     depends_on:
       mysql:
         condition: service_healthy
